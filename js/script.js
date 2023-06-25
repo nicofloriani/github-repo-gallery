@@ -8,7 +8,10 @@ const repoList = document.querySelector(".repo-list");
 const allReposInfo = document.querySelector(".repos");
 //Section where the individual repo data appears
 const repoData = document.querySelector(".repo-data");
-
+//Back to Repo Gallery button
+const viewReposButton = document.querySelector(".view-repos");
+//The input with the "Search by name" placeholder
+const filterInput = document.querySelector(".filter-repos");
 
 //Fetch user data
 const githubUserInfo = async function () {
@@ -48,6 +51,7 @@ const gitRepos = async function () {
 
 //Display info about repos
 const displayRepos = function (repos) {
+    filterInput.classList.remove("hide");
     for (const repo of repos) {
         const repoItem = document.createElement("li");
         repoItem.classList.add("repo");
@@ -55,6 +59,10 @@ const displayRepos = function (repos) {
         repoList.append(repoItem);
     }
 };
+
+//Click event on the unordered list with the class of "repo-list" 
+//with conditional statement to check if the event target matches the <h3> element
+//(i.e., the name of the repo)
 
 repoList.addEventListener("click", function (e) {
     if (e.target.matches("h3")) {
@@ -84,6 +92,7 @@ const getRepoInfo = async function (repoName) {
 
 //Display specific repo information
 const displayRepoInfo = function (repoInfo, languages) {
+    viewReposButton.classList.remove("hide");
     repoData.innerHTML = "";
     repoData.classList.remove("hide");
     allReposInfo.classList.add("hide");
@@ -97,3 +106,26 @@ const displayRepoInfo = function (repoInfo, languages) {
     `;
     repoData.append(div);
 };
+
+//Click event for the back button
+viewReposButton.addEventListener("click", function () {
+    allReposInfo.classList.remove("hide");
+    repoData.classList.add("hide");
+    viewReposButton.classList.add("hide");
+});
+
+//Dynamic search
+filterInput.addEventListener("input", function (e) {
+    const captureValue = e.target.value;
+    const repos = document.querySelectorAll(".repo");
+    const valueLowerCase = captureValue.toLowerCase();
+
+    for (const repo of repos) {
+        repoLowerCase = repo.innerText.toLowerCase();
+        if (repoLowerCase.includes(valueLowerCase)) {
+            repo.classList.remove("hide");
+        } else {
+            repo.classList.add("hide");
+        }
+    }
+});
